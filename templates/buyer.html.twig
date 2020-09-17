@@ -1,0 +1,9 @@
+{%include 'header.html.twig'%}
+<h2>Здравствуйте, покупатель</h2>
+<form name="order" id="order" action="/order/addOrder" method="POST">
+<input name="order[order_name]" placeholder="order id" ></br>
+<input name="order[order_shiping_address]" placeholder="your address"></br>
+<input name="order[order_buyer_id]" placeholder="your id"></br>
+<input name="order[order_product_id]" placeholder="your product id"></br>
+<button type="submit">Submit</button>
+</form>

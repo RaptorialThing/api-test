@@ -1,3 +1,41 @@
-#index:
-#    path: /
-#    controller: App\Controller\DefaultController::index
+index:
+   path: /
+   controller: App\Controller\DefaultController::index
+seller:
+   path: /seller
+   controller: App\Controller\SellerController::index
+buyers:
+   path: /buyer
+   controller: App\Controller\BuyerController::index
+courier:
+   path: /courier
+   controller: App\Controller\CourierController::index
+order:
+   path: /order
+   controller: App\Controller\OrderController::index
+order_list:
+   path: /order/list
+   controller: App\Controller\OrderController::list
+order_add:
+   path: /order/addOrder
+   controller: App\Controller\OrderController::addOrder
+   condition:  "context.getMethod() in ['POST']"
+   methods: POST
+order_new:
+   path: /order/new
+   controller: App\Controller\OrderController::new
+product:
+   path: /product
+   controller: App\Controller\ProductController::index
+product_id:
+   path: /product/{id}
+   controller: App\Controller\ProductController::showProduct   
+product_edit:
+   path: /product/{id}/edit
+   controller: App\Controller\ProductController::updateProduct
+product_create:
+   path: /product/create
+   controller: App\Controller\ProductController::createProduct
+product_delete:
+   path: /product/{id}/delete
+   controller: App\Controller\ProductController::deleteProduct   

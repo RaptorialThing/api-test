@@ -1,0 +1,14 @@
+<h2>Order</h2>
+{% if orders is empty %}
+orders empty
+{% else %}
+{% for order in orders %}
+{% for property,value in order %}
+{%if value is empty%}
+{% else %}
+{{property}}: {{value}} <br/>
+{%endif%}
+{%endfor%}
+<br/>
+{%endfor%}
+{% endif %}

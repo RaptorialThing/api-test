@@ -1,0 +1,34 @@
+{% include 'header.html.twig' %}
+    <body>
+    {% block body %}    
+    	<h2>Тестовое api </h2>
+		<ul>
+			<li>Покупателю <a href="/buyer/">/buyer/</a></li>
+			<li>Продавцу <a  href="/seller/">/seller/</a></li>
+			<li>Курьеру <a href="/courier/">/courier/</a></li>
+		</ul>    	
+        {% endblock %}
+        {% block javascripts %}
+        <script type="text/javascript">
+            function orderGet() {
+            axios.get("/order").then(res => {
+                console.log(res);
+            });
+        }
+        function orderPut() {
+            axios.put("/order",{"Name":"Alex"})
+            .then(res => {
+                console.log(res);
+            })
+        }
+        function orderDelete() {
+            axios.delete("/order", {"Name":"Alex"})
+            .then (res => {
+                console.log(res);
+            })
+        }
+        orderPut();
+        </script>
+        {% endblock %}
+    </body>
+</html>
