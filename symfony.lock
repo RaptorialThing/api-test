@@ -1,0 +1,11 @@
+{
+    "php": {
+        "version": "7.2"
+    },
+    "symfony/twig-pack": {
+        "version": "v1.0.0"
+    },
+    "twig/extra-bundle": {
+        "version": "v3.0.5"
+    }
+}
