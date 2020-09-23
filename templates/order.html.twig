@@ -1,14 +1,23 @@
 <h2>Order</h2>
+{%if object%}
+{%for orders in orders%}
+id: {{orders.id}} </br>
+name: {{orders.name}} <br/>
+shiping_address: {{orders.shipingAddress}} </br>
+seller_id: {{orders.sellerId}} </br>
+base_address: {{orders.baseAddress}} </br>
+product_id: {{orders.productId}}
+</br></br></br>
+{% endfor%}
+{%else%}
 {% if orders is empty %}
 orders empty
 {% else %}
-{% for order in orders %}
-{% for property,value in order %}
-{%if value is empty%}
-{% else %}
-{{property}}: {{value}} <br/>
-{%endif%}
-{%endfor%}
-<br/>
-{%endfor%}
+id: {{orders.id}} </br>
+name: {{orders.name}} <br/>
+shiping_address: {{orders.shipingAddress}} </br>
+seller_id: {{orders.sellerId}} </br>
+base_address: {{orders.baseAddress}} </br>
+product_id: {{orders.productId}}
+{% endif %}
 {% endif %}
