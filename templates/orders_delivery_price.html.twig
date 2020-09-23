@@ -1,0 +1,18 @@
+<h2>Order delivery price</h2>
+Отправка из (почтовый индекс ){{ order.baseAddress }} </br>
+Доставка в (почтовый индекс) {{ order.shipingAddress }} </br>
+Займет следующее расстояние
+<a href="https://ru.distance.to/{{order.baseAddress}}/{{order.shipingAddress}}"> 
+https://ru.distance.to/{{order.baseAddress}}/{{order.shipingAddress}}
+</a>
+<br/>
+Если интересно, вот пример другого расстояния
+<a href="https://ru.distance.to/420014/101000">
+https://ru.distance.to/420014/101000
+</a>
+</br>
+</br>
+Вот стоимость доставки Почтой России 50г
+<a href="https://postprice.ru/engine/russia/api.php?from={{order.baseAddress}}&to={{order.shipingAddress}}&mass=50&valuation=0&month=9&day=23&vat=0&oversized=0&_=1600878610561">
+Почта России Доставка
+</a>

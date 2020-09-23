@@ -10,6 +10,8 @@ use App\Entity\Product;
 use App\Entity\Order;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
+use Doctrine\ORM\Query;
+
 
 /**
 *	@Route("/order")
@@ -31,7 +33,7 @@ class OrderController extends AbstractController
 		$entityManager = $this->getDoctrine()->getManager();
 		$orders = $entityManager->getRepository(Order::class)->getRecords();
 
-		return $this->render('order.html.twig',['orders'=>$orders]);
+		return $this->render('order.html.twig',['orders'=>$orders,'object'=>true]);
 	}
 
 	public function new(Request $request)
@@ -40,6 +42,22 @@ class OrderController extends AbstractController
 			'buyer.html.twig'
 		);
 	}
+
+    public function deliveryPrice($id)
+    {
+        $order = $this->getDoctrine()
+            ->getRepository(Order::class)
+            ->find($id);
+
+            if (!$order) {
+                throw $this->createNotFoundException(
+                    'No order found for id'.$id
+                );
+            }
+
+    return $this->render('orders_delivery_price.html.twig',['order'=>$order]);
+       
+    }
 
 	public function addOrder(ValidatorInterface $validator, Request $request): Response
 	{
@@ -106,7 +124,7 @@ class OrderController extends AbstractController
     			);
     		}
 
-    return $this->render('order.html.twig',['orders'=>$order]);
+    return $this->render('order.html.twig',['orders'=>$order,'object'=>false]);
 
 	}
 }

@@ -16,14 +16,20 @@ order:
 order_list:
    path: /order/list
    controller: App\Controller\OrderController::list
+order_id:
+   path: /order/{id}
+   controller: App\Controller\OrderController::getOrder   
 order_add:
    path: /order/addOrder
    controller: App\Controller\OrderController::addOrder
    condition:  "context.getMethod() in ['POST']"
    methods: POST
 order_new:
-   path: /order/new
+   path: /new/order/
    controller: App\Controller\OrderController::new
+order_delivery_price:
+   path: /order/{id}/delivery/price
+   controller: App\Controller\OrderController::deliveryPrice   
 product:
    path: /product
    controller: App\Controller\ProductController::index
