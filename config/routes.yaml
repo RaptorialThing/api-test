@@ -40,7 +40,7 @@ product_edit:
    path: /product/{id}/edit
    controller: App\Controller\ProductController::updateProduct
 product_create:
-   path: /product/create
+   path: /create/product
    controller: App\Controller\ProductController::createProduct
 product_delete:
    path: /product/{id}/delete

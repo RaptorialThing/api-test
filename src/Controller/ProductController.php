@@ -7,10 +7,32 @@ use Symfony\Component\Routing\Annotation\Route;
 use App\Entity\Product;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Validator\Validator\ValidatorInterface;
+use App\Service\ProductService;
+use App\Repository\ProductRepository;
+use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpFoundation\Request;
+use App\Form\ProducType;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+
 
 class ProductController extends AbstractController
 {
+
+    private $productService;
+
+    public function __construct(ProductService $productService)
+    {
+        $this->productService = $productService;
+
+    }
+
+    public function getProductService()
+    {
+        return $this->productService;
+    }
+
     /**
      * @Route("/product", name="product")
      */
@@ -21,84 +43,102 @@ class ProductController extends AbstractController
         ]);
     }
 
-    public function createProduct(ValidatorInterface $validator): Response
+    /**
+    * @Route("/create/product", name="product_create")
+    */
+
+    public function createProduct(Request $request)
     {
-    	$entityManager = $this->getDoctrine()->getManager();
-    	$product = new Product();
-    	$product->setName(
-    		'Marfusha\'Secret');
-    	$product->setDefaultShippingAddress('101000');
-    	$product->setSellerId(1);
-    	
-    	$entityManager->persist($product);
+        $product = new Product();
 
-    	$entityManager->flush();
+        $form = $this->createForm(ProducType::class,$product);
 
-    	$errors = $validator->validate($product);
-    	if (count($errors) > 0) {
-    		return new Response((string) $errors, 400);
-    	}
+        $form->handleRequest($request);
 
-    	return new Response('Saved new product with id '.$product->getId());
+        if ($form->isSubmitted() && $form->isValid()) {
+            $product = $form->getData();
+            $product = $this->productService->newProduct($product);
+
+            if (!$product) {
+                return new Response('Error saving new product ');
+            } 
+
+            $route =$this->generateUrl('product_id', ['id' => $product->getId()], 301); 
+            return $this->redirect($route);                         
+        }
+
+            return $this->render('buyerForm.html.twig', [
+            'form' => $form->createView()
+        ]);          
+
     }
+
+    // public function showProduct($id)
+    // {
+    // 	$product = $this->getDoctrine()
+    // 		->getRepository(Product::class)
+    // 		->find($id);
+
+    // 		if (!$product) {
+    // 			throw $this->createNotFoundException(
+    // 				'No product found for id'.$id
+    // 			);
+    // 		}
+
+    // 		return $this->render('product/show.html.twig',['product'=>$product]);
+    // }
+
+    /**
+    *@Route("/product/{id}", name="product_id")
+    */
 
     public function showProduct($id)
     {
-    	$product = $this->getDoctrine()
-    		->getRepository(Product::class)
-    		->find($id);
+        $product = $this->productService->showProduct($id);
 
-    		if (!$product) {
-    			throw $this->createNotFoundException(
-    				'No product found for id'.$id
-    			);
-    		}
+        if (!$product) {
+         throw $this->createNotFoundException(
+             'Not found for id: '.$id
+         );
+        }            
 
-    		return $this->render('product/show.html.twig',['product'=>$product]);
+        return $this->render('product/show.html.twig',['product'=>$product]);
     }
 
+
     /**
-    *@Route("/product/edit{id}")
+    *@Route("/product/update/{id}")
     */
 
     public function updateProduct($id)
     {
-    	$entityManager = $this->getDoctrine()->getManager();
-    	$product = $entityManager->getRepository(Product::class)->find($id);
 
-    	if (!$product) {
-    		throw $this->createNotFoundException(
-    			'Not found for id: '.$id
-    		);
-    	}
+        $product = $this->productService->updateProduct($id);
 
-    	$product->setName("New name");
-    	$entityManager->flush();
+        if (!$product) {
+         throw $this->createNotFoundException(
+             'Not found for id: '.$id
+         );
+        }
 
-    	return $this->redirectToRoute('product_id',[
-    		'id' => $product->getId()
-    	]);
+    	return new Response('Updated product with id '.$product->getId());
     }
 
     /**
-    *@Route("/product/{id}/delete")
+    *@Route("/product/delete/{id}")
     */
     public function deleteProduct($id)
     {
-    	$entityManager = $this->getDoctrine()->getManager();
-    	$product = $entityManager->getRepository(Product::class)->find($id);
 
+        $id = $this->productService->deleteProduct($id);
 
-    	if (!$product) {
-    		throw $this->createNotFoundException(
-    			'Not found for id: '.$id
-    		);
-    	}
+        if (!$id) {
+            throw $this->createNotFoundException(
+                'Not found for id: '.$id
+            );
+        }        
 
-    	$entityManager->remove($product);
-    	$entityManager->flush();
-
-    	return $this->redirectToRoute('product');    	
+    	return new Response('Deleted product with id '.$id);
 
     }
 }

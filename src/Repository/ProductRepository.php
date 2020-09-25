@@ -5,6 +5,7 @@ namespace App\Repository;
 use App\Entity\Product;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\ORM\EntityManagerInterface;
 
 /**
  * @method Product|null find($id, $lockMode = null, $lockVersion = null)
@@ -47,4 +48,34 @@ class ProductRepository extends ServiceEntityRepository
         ;
     }
     */
+    public function getProductById($id)
+    {
+        $product = $this
+            ->find($id);
+
+        if (!$product) {
+            $product = false;
+        }    
+
+        return $product;        
+    }
+    public function updateProduct($id)
+    {
+        $entityManager = $this->getEntityManager();
+        $product = $entityManager->getRepository(Product::class)->find($id);
+        $product->setName("New name");
+        $entityManager->flush();  
+        return $product;  
+    }
+
+    public function newProduct($product)
+    {
+        $entityManager = $this->getEntityManager();
+        
+        $entityManager->persist($product);
+
+        $entityManager->flush();
+
+        return $product;
+    }
 }
