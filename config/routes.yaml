@@ -20,7 +20,7 @@ order_id:
    path: /order/{id}
    controller: App\Controller\OrderController::getOrder   
 order_add:
-   path: /order/addOrder
+   path: /order/add
    controller: App\Controller\OrderController::addOrder
    condition:  "context.getMethod() in ['POST']"
    methods: POST

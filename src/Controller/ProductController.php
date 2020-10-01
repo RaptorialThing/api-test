@@ -110,18 +110,30 @@ class ProductController extends AbstractController
     *@Route("/product/update/{id}")
     */
 
-    public function updateProduct($id)
+    public function updateProduct(Request $request, $id)
     {
+        $product = new Product();
 
-        $product = $this->productService->updateProduct($id);
+        $form = $this->createForm(ProducType::class,$product);
 
-        if (!$product) {
-         throw $this->createNotFoundException(
-             'Not found for id: '.$id
-         );
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $product = $form->getData();
+            $product = $this->productService->updateProduct($id,$product);
+
+            if (!$product) {
+                return new Response('Error updating product ');
+            } 
+
+            $route =$this->generateUrl('product_id', ['id' => $product->getId()], 301); 
+            return $this->redirect($route);                         
         }
 
-    	return new Response('Updated product with id '.$product->getId());
+            return $this->render('buyerForm.html.twig', [
+            'form' => $form->createView()
+        ]);
+
     }
 
     /**

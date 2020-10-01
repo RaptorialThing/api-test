@@ -48,8 +48,37 @@ class OrderRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult()
         ;
-    }    
+    }  
 
+    public function getOrderById($id) {
+        $order = $this->find($id);
+
+        if (!$order) {
+            $order = false;
+        }
+
+        return $order;
+    } 
+
+    public function updateOrder($id)
+    {
+        $entityManager = $this->getEntityManager();
+        $order = $entityManager->getRepository(Order::class)->find($id);
+        $product->setName("New name");
+        $entityManager->flush();  
+        return $order;  
+    }
+
+    public function newOrder($order)
+    {
+        $entityManager = $this->getEntityManager();
+        
+        $entityManager->persist($order);
+
+        $entityManager->flush();
+
+        return $order;
+    }
     /*
     public function findOneBySomeField($value): ?Order
     {

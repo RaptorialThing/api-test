@@ -48,12 +48,27 @@ class ProductService
  * @param  int
  * @return Product/Boolean
  */
-    public function updateProduct($id)
+    public function updateProduct($id,$product)
     {
-        $product = $this->entityManager->getRepository(Product::class)->find($id);
-        $product->setName("New name");
-        $this->entityManager->flush();  
-        return $product; 
+        $productOld = $this->entityManager->getRepository(Product::class)->find($id);
+        $validator = $this->validator;
+
+        $errors = $validator->validate($product);
+
+        if (count($errors) > 0) {
+            return false;
+        }
+        $mergedObj = (object) array_merge((array) $product, (array) $productOld );
+        dd($mergedObj);
+        
+
+        $this->entityManager->persist($productOld);
+        
+        $this->entityManager->merge($productOld);
+
+        $this->entityManager->flush();
+
+        return $productOld;
     }
 
     public function newProduct($product)
